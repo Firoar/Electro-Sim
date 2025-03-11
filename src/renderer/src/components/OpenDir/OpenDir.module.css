@@ -1,0 +1,15 @@
+.OpenDirectory-btn {
+  width: 200px;
+  height: 35px;
+  font-size: large;
+  font-weight: 500;
+  color: white;
+  background-color: var(--principle-color);
+  border: none;
+  border-radius: 5px;
+}
+
+.OpenDirectory-btn:hover {
+  cursor: pointer;
+  filter: brightness(150%);
+}

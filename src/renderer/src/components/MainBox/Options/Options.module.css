@@ -1,0 +1,40 @@
+.option-div {
+  position: absolute;
+  background-color: white;
+  height: 200px;
+  width: 200px;
+  border-radius: 5px;
+}
+
+.file-option-div {
+  height: 180px;
+  top: 0;
+  left: 5px;
+}
+
+.custom-option-div {
+  top: 0;
+  left: 205px;
+}
+
+.builtIn-option-div {
+  top: 0;
+  left: 71px;
+}
+
+.file-single-option {
+  width: 100%;
+  color: black;
+  height: 45px;
+  border-bottom: solid 1px black;
+
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding-left: 10px;
+}
+
+.file-single-option:hover {
+  cursor: pointer;
+  background-color: rgba(182, 165, 165, 0.521);
+}

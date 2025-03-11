@@ -1,0 +1,12 @@
+.mainbox-main-div {
+  width: 100%;
+  height: calc(100% - 30px);
+  /* outline: solid 3px red; */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+
+  position: relative;
+}

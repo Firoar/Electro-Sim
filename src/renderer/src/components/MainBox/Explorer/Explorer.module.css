@@ -1,0 +1,75 @@
+.explorer-main-div {
+  width: 20%;
+  height: 100%;
+  /* outline: solid rgb(250, 250, 250) 1px; */
+  border-right: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.all-files::-webkit-scrollbar {
+  display: none;
+}
+
+.file-box {
+  width: 150%;
+  padding: 0 10px;
+  min-height: 25px;
+  height: 25px;
+  border-bottom: solid 1px white;
+
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+
+  cursor: pointer;
+}
+
+.file-box:hover {
+  filter: brightness(150%);
+}
+
+.create-file {
+  width: 100%;
+  height: 40px;
+
+  /* outline: solid 1px rgb(255, 255, 255); */
+  border-bottom: solid 1px rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.all-files {
+  width: 100%;
+  height: calc(100% - 35px);
+  /* outline: solid 1px rgb(87, 3, 87); */
+  overflow: scroll;
+  scrollbar-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.circluar-btn {
+  height: 30px;
+  width: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: solid white 1px;
+}
+
+.circluar-btn:hover {
+  cursor: pointer;
+  filter: brightness(150%);
+}
+
+.highlight-p {
+  background-color: rgb(207, 202, 212);
+}

@@ -1,0 +1,38 @@
+export const calculatePos = (i: number, type: 'in' | 'out') => {
+  const style: React.CSSProperties =
+    type === 'in'
+      ? {
+          position: 'absolute',
+          top: `${i * 50 + 15}px`,
+          left: '15px',
+          width: '20px',
+          height: '20px',
+          border: 'solid 2px black',
+          background: 'lightgreen'
+        }
+      : {
+          position: 'absolute',
+          top: `${i * 50 + 15}px`,
+          right: '15px',
+          width: '20px',
+          height: '20px',
+          border: 'solid 2px black',
+          background: '#F08080'
+        }
+  return style
+}
+
+export const calculateDim = (numIn: number, numOut: number) => {
+  return {
+    width: '150px',
+    height: `${Math.max(numIn, numOut) * 50 + 30}px` // 30 for gate name 50 for each
+  }
+}
+
+export const bulbDim = () => {
+  const style: React.CSSProperties = {
+    width: '150px',
+    height: `${30 + 60}px`
+  }
+  return style
+}

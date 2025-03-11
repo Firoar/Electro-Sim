@@ -1,0 +1,77 @@
+.workarea-main-div {
+  width: 80%;
+  height: 100%;
+  /* outline: solid 3px yellow; */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.app-name {
+  font-size: larger;
+  color: silver;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+
+.tab-bar {
+  width: 100%;
+  height: 45px;
+  /* outline: solid rgb(200, 255, 0) 1px;
+   */
+  border-bottom: solid 1px white;
+  overflow-x: scroll;
+  scrollbar-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.tab {
+  width: fit-content;
+  height: 100%;
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  outline: solid 1px white;
+  gap: 10px;
+
+  cursor: pointer;
+}
+
+.tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.cross:hover {
+  filter: brightness(150%);
+  cursor: pointer;
+}
+
+.underline {
+  border-bottom: solid 5px;
+  border-color: var(--principle-color);
+}
+
+.error-in-opening {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-in-opening > p {
+  font-size: larger;
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: silver;
+}
