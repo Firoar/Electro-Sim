@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react'
 import MainBox from './components/MainBox/MainBox'
 import Navbar from './components/Navbar/Navbar'
-import React from 'react'
 // import chipGenerator from './utils/chipGenerator.ts'
 
 // type Circuit =
@@ -64,6 +64,28 @@ function App(): JSX.Element {
   // })
   // console.log(inputOfAdder)
   // chipGenerator('halfAdder', halfAdder)
+  const [isSaved, setIsSaved] = useState<Boolean>(false)
+
+  useEffect(() => {
+    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+      if (isSaved) {
+        event.preventDefault()
+        event.returnValue = false
+        await saveDataBeforeExit()
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [isSaved])
+
+  const saveDataBeforeExit = async () => {
+    alert('saving')
+    setIsSaved(true)
+    await window.electron.saveBeforeQuit()
+  }
 
   return (
     <div className="main-div">

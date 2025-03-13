@@ -18,10 +18,21 @@ const TabBar = () => {
   const { chipContents } = useSelector((state: RootState) => state.chips)
   const dispatch = useDispatch()
 
-  const handleRemoveFromTabs = (file: string, e: React.MouseEvent) => {
+  const handleRemoveFromTabs = async (file: string, e: React.MouseEvent) => {
     e.stopPropagation()
+
+    //save the current selcted file
+    if (selectedFile !== '') {
+      // save the chip content
+      await window.electron.saveChipContents(selectedFile, chipContents)
+      dispatch(resetContents())
+    }
+
     const newAllSelectedFiles = allSelectedFiles.filter((f) => f !== file)
     dispatch(setAllSelectedFiles(newAllSelectedFiles))
+
+    // new selectedFile
+    dispatch(setSelectedFile(newAllSelectedFiles.at(-1) || ''))
   }
 
   const handleSelectTab = async (file: string) => {

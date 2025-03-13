@@ -34,6 +34,25 @@ function createWindow(): void {
     mainWindow?.show()
   })
 
+  mainWindow.on('close', (e) => {
+    // e.preventDefault()
+    if (mainWindow) {
+      const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: 'question',
+        buttons: ['Cancel', 'Quit'],
+        defaultId: 0,
+        title: 'Confirm',
+        message: 'Some content may not have been saved. Are you sure you want to quit?'
+      })
+
+      if (choice === 0) {
+        e.preventDefault()
+      }
+    } else {
+      e.preventDefault()
+    }
+  })
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -215,6 +234,10 @@ app.whenReady().then(() => {
     })
 
     return result
+  })
+
+  ipcMain.handle('saved', async () => {
+    console.log('saved bro... chill')
   })
 
   ipcMain.handle('saveChipContents', async (_, path: string, chipContents: Content[]) => {

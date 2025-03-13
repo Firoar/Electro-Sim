@@ -95,12 +95,24 @@
   filter: brightness(150%);
 }
 
-.component-arrange {
-  /* flex-grow: 1; */
+.jod-box {
   width: calc(100% - 150px);
 
   /* Ensure it's at least full viewport width */
   height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.component-arrange {
+  /* flex-grow: 1; */
+  width: 100%;
+
+  /* Ensure it's at least full viewport width */
+  height: calc(100% - 30px);
   /* min-height: 100vh; Allow vertical expansion */
 
   overflow: auto;
@@ -179,8 +191,30 @@
   width: 150px;
   height: 30px;
   text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chip-cancel-btn {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  right: 5px;
+  display: none;
 }
 
+.chip-header:hover .chip-cancel-btn {
+  display: block; /* Visible only on hover */
+  cursor: pointer;
+}
+
+.chip-header {
+  width: 150px;
+  height: 30px;
+  position: relative;
+}
 .chip-body {
   width: 150px;
   height: calc(100% - 30px);
@@ -203,6 +237,6 @@
 }
 
 .bulb-img {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }

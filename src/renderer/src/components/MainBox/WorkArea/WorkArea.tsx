@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux'
 import classes from './WorkArea.module.css'
-import { RootState } from 'renderer/src/store/store'
 import TabBar from './TabBar'
 import CodeSpace from './CodeSpace/MainCodeSpace'
+import { RootState } from '@renderer/store/store'
 
 const WorkArea = () => {
   const { allSelectedFiles } = useSelector((state: RootState) => state.fileExplorer)

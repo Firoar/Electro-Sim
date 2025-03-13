@@ -6,13 +6,15 @@ export interface chips {
   chipContents: Content[]
   currId: number
   dimensions: { width: number; height: number }
+  connectionTime: boolean
 }
 
 const initialState: chips = {
   selectedChip: { name: '', loc: '' },
   chipContents: [],
   currId: 0,
-  dimensions: { width: 1800, height: 1200 }
+  dimensions: { width: 1800, height: 1200 },
+  connectionTime: false
 }
 
 export const chipSlice = createSlice({
@@ -59,6 +61,24 @@ export const chipSlice = createSlice({
     resetContents: (state) => {
       state.chipContents = initialState.chipContents
       state.currId = initialState.currId
+    },
+    toggleChipStatus: (state, action: PayloadAction<number>) => {
+      const id = action.payload
+      const chipIndex = state.chipContents.findIndex((ch) => ch.id === id)
+      if (chipIndex != -1) {
+        const changeTo = state.chipContents[chipIndex].status === 'off' ? 'on' : 'off'
+        state.chipContents[chipIndex] = {
+          ...state.chipContents[chipIndex],
+          status: changeTo
+        }
+      }
+    },
+    removeChip: (state, action: PayloadAction<number>) => {
+      const id = action.payload
+      state.chipContents = state.chipContents.filter((chip) => chip.id !== id)
+    },
+    toggleConnectionTime: (state) => {
+      state.connectionTime = !state.connectionTime
     }
   }
 })
@@ -70,6 +90,9 @@ export const {
   setDimensions,
   pushToChipContents,
   updateChipPosition,
-  resetContents
+  resetContents,
+  toggleChipStatus,
+  removeChip,
+  toggleConnectionTime
 } = chipSlice.actions
 export default chipSlice.reducer

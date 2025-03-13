@@ -44,6 +44,9 @@ if (process.contextIsolated) {
       saveChipContents: async (path: string, chipContents: Content[]) => {
         const result = await ipcRenderer.invoke('saveChipContents', path, chipContents)
         return result
+      },
+      saveBeforeQuit: async () => {
+        await ipcRenderer.invoke('saved')
       }
     })
   } catch (error) {

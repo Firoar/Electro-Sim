@@ -8,7 +8,8 @@ export const calculatePos = (i: number, type: 'in' | 'out') => {
           width: '20px',
           height: '20px',
           border: 'solid 2px black',
-          background: 'lightgreen'
+          background: 'lightgreen',
+          borderRadius: '50%'
         }
       : {
           position: 'absolute',
@@ -17,7 +18,8 @@ export const calculatePos = (i: number, type: 'in' | 'out') => {
           width: '20px',
           height: '20px',
           border: 'solid 2px black',
-          background: '#F08080'
+          background: '#F08080',
+          borderRadius: '50%'
         }
   return style
 }
@@ -32,7 +34,7 @@ export const calculateDim = (numIn: number, numOut: number) => {
 export const bulbDim = () => {
   const style: React.CSSProperties = {
     width: '150px',
-    height: `${30 + 60}px`
+    height: `${30 + 50}px`
   }
   return style
 }

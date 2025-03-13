@@ -24,6 +24,8 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
     "@reduxjs/toolkit": "^2.6.0",
+    "@svgdotjs/svg.js": "^3.2.4",
+    "@svgdotjs/svg.topath.js": "^2.0.3",
     "clsx": "^2.1.1",
     "electron-prompt": "^1.7.0",
     "electron-updater": "^6.3.9",

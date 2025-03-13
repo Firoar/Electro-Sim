@@ -22,6 +22,7 @@ declare global {
       getCustomChips: (path: string) => Promise<FilesInfo[]>
       retrieveContentofFile: (path: string) => Promise<FileData | { error: string }>
       saveChipContents: (path: string, chipContents: Content[]) => Promise<Boolean>
+      saveBeforeQuit: () => Promise<void>
     }
     api: unknown
   }

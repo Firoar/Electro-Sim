@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-// import { RootState } from '@renderer/store/store'
 import { FilesInfo } from 'src/types/fileTypes'
 
 export interface FileExplorer {
@@ -28,17 +27,6 @@ const initialState: FileExplorer = {
   clickedCustomChipsOption: false
 }
 
-// export const setSelectedFileThunk = createAsyncThunk(
-
-//   'fileExplorer/setSelectedFileThunk',
-//   async (fileName: string,{getState,dispatch}) => {
-//     const state = getState() as RootState
-//     const chipContents = state.chips.chipContents
-
-//   }
-
-// )
-
 export const fileExplorerSlice = createSlice({
   name: 'fileExplorer',
   initialState,
@@ -54,7 +42,7 @@ export const fileExplorerSlice = createSlice({
     },
     setSelectedFile: (state, action: PayloadAction<string>) => {
       state.selectedFile = action.payload
-      if (!state.allSelectedFiles.includes(action.payload)) {
+      if (!state.allSelectedFiles.includes(action.payload) && action.payload !== '') {
         state.allSelectedFiles.push(action.payload)
       }
     },

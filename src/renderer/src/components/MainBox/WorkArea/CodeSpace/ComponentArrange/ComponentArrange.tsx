@@ -6,7 +6,6 @@ import { getFileContent } from './utils/getFileContents'
 import InfiniteWhiteBoard from './InfiniteWhiteBoard'
 import { RootState } from '@renderer/store/store'
 import { setChipContents, setCurrId } from '@renderer/store/features/chips/chipSlice'
-// import { setChipContents, setCurrId } from 'public/renderer/src/store/features/chips/chipSlice'
 
 const ComponentArrange = () => {
   const dispatch = useDispatch()

@@ -1,7 +1,7 @@
+import { RootState } from '@renderer/store/store'
 import classes from '../CodeArea.module.css'
 import DrawGates from './DrawGates'
 import { useSelector } from 'react-redux'
-import { RootState } from 'public/renderer/src/store/store'
 
 const InfiniteWhiteBoard = () => {
   const { dimensions } = useSelector((state: RootState) => state.chips)
