@@ -240,3 +240,10 @@
   width: 40px;
   height: 40px;
 }
+.line-svg {
+  z-index: 5;
+}
+
+.line-svg:hover {
+  cursor: pointer;
+}

@@ -7,6 +7,10 @@ export interface chips {
   currId: number
   dimensions: { width: number; height: number }
   connectionTime: boolean
+  wires: Record<string, boolean>
+  inputChipBtn: string
+  outputChipBtn: string
+  // wireMap: Map<string, [number, number, number, number]>
 }
 
 const initialState: chips = {
@@ -14,13 +18,22 @@ const initialState: chips = {
   chipContents: [],
   currId: 0,
   dimensions: { width: 1800, height: 1200 },
-  connectionTime: false
+  connectionTime: false,
+  wires: {},
+  inputChipBtn: '',
+  outputChipBtn: ''
+  // wireMap: new Map<string, [number, number, number, number]>()
 }
 
 export const chipSlice = createSlice({
   name: 'chips',
   initialState,
   reducers: {
+    resetStates: (state) => {
+      state.connectionTime = initialState.connectionTime
+      state.inputChipBtn = initialState.inputChipBtn
+      state.outputChipBtn = initialState.outputChipBtn
+    },
     setSelectedChip: (state, action: PayloadAction<{ name: string; loc: string }>) => {
       state.selectedChip = action.payload
     },
@@ -61,6 +74,9 @@ export const chipSlice = createSlice({
     resetContents: (state) => {
       state.chipContents = initialState.chipContents
       state.currId = initialState.currId
+      state.connectionTime = initialState.connectionTime
+      state.inputChipBtn = initialState.inputChipBtn
+      state.outputChipBtn = initialState.outputChipBtn
     },
     toggleChipStatus: (state, action: PayloadAction<number>) => {
       const id = action.payload
@@ -74,11 +90,80 @@ export const chipSlice = createSlice({
       }
     },
     removeChip: (state, action: PayloadAction<number>) => {
-      const id = action.payload
-      state.chipContents = state.chipContents.filter((chip) => chip.id !== id)
+      const chipId = action.payload
+      state.chipContents = state.chipContents.filter((chip) => chip.id !== chipId)
+
+      state.wires = Object.fromEntries(
+        Object.entries(state.wires).filter(([key]) => {
+          const [inChipId, , outChipId] = key.split('-')
+          return Number(inChipId) !== chipId && Number(outChipId) !== chipId
+        })
+      )
+
+      // Remove chip references from inputFrom & outputTo in other chips
+      state.chipContents.forEach((chip) => {
+        chip.inputFrom = chip.inputFrom.filter((ele) => ele[0] !== chipId)
+        chip.outputTo = chip.outputTo.filter((ele) => ele[0] !== chipId)
+      })
     },
     toggleConnectionTime: (state) => {
       state.connectionTime = !state.connectionTime
+    },
+    setInputChipBtn: (state, action: PayloadAction<string>) => {
+      state.inputChipBtn = action.payload
+    },
+    setOutputChipBtn: (state, action: PayloadAction<string>) => {
+      state.outputChipBtn = action.payload
+    },
+    addWire: (state, action: PayloadAction<string>) => {
+      state.wires[action.payload] = true
+
+      const [inputChipId, inId, outputChipId, outId] = action.payload.split('-').map(Number)
+      const inputChipIndex = state.chipContents.findIndex((ch) => ch.id === inputChipId)
+      const outputChipIndex = state.chipContents.findIndex((ch) => ch.id === outputChipId)
+
+      if (inputChipIndex !== -1) {
+        const inputChip = state.chipContents[inputChipIndex]
+
+        // Ensure inputFrom array exists
+        inputChip.inputFrom ??= []
+
+        // Check if the wire already exists
+        const inWireExists = inputChip.inputFrom.some(
+          ([outIdChip, outPin, inPin]) =>
+            outIdChip === outputChipId && outPin === outId && inPin === inId
+        )
+
+        if (!inWireExists) {
+          inputChip.inputFrom.push([outputChipId, outId, inId])
+        }
+      }
+
+      if (outputChipIndex !== -1) {
+        const outputChip = state.chipContents[outputChipIndex]
+
+        // Ensure outputTo array exists
+        outputChip.outputTo ??= []
+
+        // Check if the wire already exists
+        const outWireExists = outputChip.outputTo.some(
+          ([inIdChip, inPin, outPin]) =>
+            inIdChip === inputChipId && inPin === inId && outPin === outId
+        )
+
+        if (!outWireExists) {
+          outputChip.outputTo.push([inputChipId, inId, outId])
+        }
+      }
+    },
+    addWireToWires: (state, action: PayloadAction<[number, number, number, number][]>) => {
+      action.payload.forEach(([inputChipId, inId, outputChipId, outId]) => {
+        const key = `${inputChipId}-${inId}-${outputChipId}-${outId}`
+        state.wires[key] = true
+      })
+    },
+    removeWire: (state, action: PayloadAction<string>) => {
+      delete state.wires[action.payload]
     }
   }
 })
@@ -93,6 +178,12 @@ export const {
   resetContents,
   toggleChipStatus,
   removeChip,
-  toggleConnectionTime
+  toggleConnectionTime,
+  setInputChipBtn,
+  setOutputChipBtn,
+  addWire,
+  removeWire,
+  resetStates,
+  addWireToWires
 } = chipSlice.actions
 export default chipSlice.reducer

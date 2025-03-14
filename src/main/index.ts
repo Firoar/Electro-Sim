@@ -7,7 +7,7 @@ import {
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { allContents, isCompiled, saveToFile, writeChipFileContents } from './helper'
+import { allContents, evaluateChip, isCompiled, saveToFile, writeChipFileContents } from './helper'
 import fs from 'fs'
 import prompt from 'electron-prompt'
 import { Content, FileData } from '../types/filedata'
@@ -285,6 +285,18 @@ app.whenReady().then(() => {
       return { error: 'Failed to read file' }
     }
   })
+
+ ipcMain.handle('evaluateChip', async (_, name: string, chips: Content[]) => {
+   try {
+     const classBody = evaluateChip(name, chips)
+     return { class: classBody }
+   } catch (error) {
+     dialog.showErrorBox('Evaluation Error', (error as Error).message)
+     console.error('Error evaluating chip:', error)
+     return { error: (error as Error).message }
+   }
+ })
+
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

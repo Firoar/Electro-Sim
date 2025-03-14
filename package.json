@@ -27,6 +27,7 @@
     "@svgdotjs/svg.js": "^3.2.4",
     "@svgdotjs/svg.topath.js": "^2.0.3",
     "clsx": "^2.1.1",
+    "d3": "^7.9.0",
     "electron-prompt": "^1.7.0",
     "electron-updater": "^6.3.9",
     "konva": "^9.3.18",

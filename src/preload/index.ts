@@ -47,6 +47,10 @@ if (process.contextIsolated) {
       },
       saveBeforeQuit: async () => {
         await ipcRenderer.invoke('saved')
+      },
+      evaluateChip: async (name: string, chips: Content[]) => {
+        const result = await ipcRenderer.invoke('evaluateChip', name, chips)
+        return result
       }
     })
   } catch (error) {

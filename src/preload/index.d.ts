@@ -23,6 +23,10 @@ declare global {
       retrieveContentofFile: (path: string) => Promise<FileData | { error: string }>
       saveChipContents: (path: string, chipContents: Content[]) => Promise<Boolean>
       saveBeforeQuit: () => Promise<void>
+      evaluateChip: (
+        name: string,
+        chips: Content[]
+      ) => Promise<{ class: string } | { error: string }>
     }
     api: unknown
   }

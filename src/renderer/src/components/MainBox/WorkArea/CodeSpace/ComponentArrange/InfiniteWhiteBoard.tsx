@@ -2,6 +2,7 @@ import { RootState } from '@renderer/store/store'
 import classes from '../CodeArea.module.css'
 import DrawGates from './DrawGates'
 import { useSelector } from 'react-redux'
+import WireCanvas from './WireCanvas'
 
 const InfiniteWhiteBoard = () => {
   const { dimensions } = useSelector((state: RootState) => state.chips)
@@ -16,6 +17,7 @@ const InfiniteWhiteBoard = () => {
       className={classes['white-board']}
     >
       <DrawGates />
+      <WireCanvas width={dimensions.width} height={dimensions.height} />
     </div>
   )
 }

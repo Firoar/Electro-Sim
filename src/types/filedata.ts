@@ -21,4 +21,4 @@ export type Content = {
   
 }
 
-type NumOrPair = number | [number, number]
+type NumOrPair =  [number, number,number] // destinay chip id, id , myId   => i already have my chipId
