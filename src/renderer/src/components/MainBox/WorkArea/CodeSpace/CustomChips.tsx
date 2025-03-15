@@ -19,6 +19,8 @@ const CustomChips = () => {
     if (!selectedFile) return
     try {
       const customChips = await window.electron.getCustomChips(selectedFile)
+      console.log(customChips)
+
       setLocalChips(customChips.map((ch) => ({ name: ch.name, loc: ch.path })))
     } catch (error) {
       console.error('Error fetching custom chips:', error)

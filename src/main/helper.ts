@@ -109,6 +109,8 @@ export const evaluateChip = (name: string, chips: Content[]) => {
   const allGates: Content[] = []
   const allBulbs: Content[] = []
 
+  const inputs = new Map<number, boolean>()
+
   // Categorizing chips into bulbs, switches, and gates
   chips.forEach((chip) => {
     if (chip.inputFrom.length === chip.inputs) {
@@ -116,7 +118,10 @@ export const evaluateChip = (name: string, chips: Content[]) => {
         bulbs.set(chip.id, chip)
         allBulbs.push(chip)
       } else if (chip.name === 'switch') {
-        if (chip.outputTo.length >= chip.outputs) switches.set(chip.id, chip)
+        if (chip.outputTo.length >= chip.outputs) {
+          switches.set(chip.id, chip)
+          inputs.set(chip.id, chip.status === 'on')
+        }
       } else {
         gates.set(chip.id, chip)
         allGates.push(chip)
@@ -186,35 +191,55 @@ export const evaluateChip = (name: string, chips: Content[]) => {
 
   // **Generate Class Body**
   const classBody = `
-  export class ${name}Chip {
-    static inputs = new Map<number, boolean>();
-    static compute(inputs: Map<number, boolean>) {
-      this.inputs = new Map(inputs);
-      ${orderIds
-        .map((id) => {
-          const gate = gates.get(id)
-          if (!gate) return ''
-          return `
-         const nand${gate.id} = !(
-          !!this.inputs.get(${gate.inputFrom[0][0]}) &&
-          !!this.inputs.get(${gate.inputFrom[1][0]})
-         );
-         this.inputs.set(${id}, nand${id});
+export class ${name}Chip {
+    static compute(inputs) {
+        this.inputs = new Map(inputs);
+        ${orderIds
+          .map((id) => {
+            const gate = gates.get(id)
+            if (!gate) return ''
+            return `
+        const nand${gate.id} = !(
+            !!this.inputs.get(${gate.inputFrom[0][0]}) &&
+            !!this.inputs.get(${gate.inputFrom[1][0]})
+        );
+        this.inputs.set(${id}, nand${id});
         `
-        })
-        .join('\n')}
+          })
+          .join('\n')}
+        
         // Prepare outputs => bulbs
-        const outputs = new Map<number, boolean>();
+        const outputs = new Map();
         ${allBulbs
           .map((bulb) => {
             return `
-           outputs.set(${bulb.id},!!this.inputs.get(${bulb.inputFrom[0][0]}))
-          `
+        outputs.set(${bulb.id}, !!this.inputs.get(${bulb.inputFrom[0][0]}));
+        `
           })
           .join('\n')}
-        return outputs;  
+        
+        return outputs;
     }
+}
+
+export default ${name}Chip; // Ensure default export for dynamic import
+`
+
+  return { classBody: classBody, inputs: inputs }
+}
+
+async function loadGeneratedClass(filePath: string) {
+  try {
+    const module = await import(`file://${filePath}`)
+    return module.default || module
+  } catch (error) {
+    console.error('❌ Error importing file:', error)
   }
-  `
-  return classBody
+}
+
+export const getOutputs = async (filePath: string, inputs: Map<number, boolean>) => {
+  const generatedChip = await loadGeneratedClass(filePath)
+  if (generatedChip.compute) {
+    return await generatedChip.compute(inputs)
+  }
 }

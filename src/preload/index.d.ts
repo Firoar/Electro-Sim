@@ -26,7 +26,16 @@ declare global {
       evaluateChip: (
         name: string,
         chips: Content[]
-      ) => Promise<{ class: string } | { error: string }>
+      ) => Promise<{ class: string; inputs: Map<number, boolean> } | { error: string }>
+      saveCompileFiles: (
+        cwd: string,
+        pathOfFile: string,
+        classBody: string
+      ) => Promise<{ success: boolean; path: string } | { success: boolean; error: string }>
+      getOutputsOfChip: (
+        filePath: string,
+        inputs: Map<number, boolean>
+      ) => Promise<{ error: string } | { outputs: Map<number, boolean> }>
     }
     api: unknown
   }

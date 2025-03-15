@@ -7,10 +7,18 @@ import {
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { allContents, evaluateChip, isCompiled, saveToFile, writeChipFileContents } from './helper'
+import {
+  allContents,
+  evaluateChip,
+  getOutputs,
+  isCompiled,
+  saveToFile,
+  writeChipFileContents
+} from './helper'
 import fs from 'fs'
 import prompt from 'electron-prompt'
 import { Content, FileData } from '../types/filedata'
+import { execSync } from 'child_process'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -286,17 +294,68 @@ app.whenReady().then(() => {
     }
   })
 
- ipcMain.handle('evaluateChip', async (_, name: string, chips: Content[]) => {
-   try {
-     const classBody = evaluateChip(name, chips)
-     return { class: classBody }
-   } catch (error) {
-     dialog.showErrorBox('Evaluation Error', (error as Error).message)
-     console.error('Error evaluating chip:', error)
-     return { error: (error as Error).message }
-   }
- })
+  ipcMain.handle('evaluateChip', async (_, name: string, chips: Content[]) => {
+    try {
+      const obj = evaluateChip(name, chips)
+      return { class: obj.classBody, inputs: obj.inputs }
+    } catch (error) {
+      dialog.showErrorBox('Evaluation Error', (error as Error).message)
+      console.error('Error evaluating chip:', error)
+      return { error: (error as Error).message }
+    }
+  })
 
+  ipcMain.handle(
+    'saveCompileFiles',
+    async (_, cwd: string, pathOfFile: string, classBody: string) => {
+      try {
+        let dotChipFolderPath = path.join(cwd, '.chips')
+        if (!fs.existsSync(dotChipFolderPath)) {
+          fs.mkdirSync(dotChipFolderPath, { recursive: true })
+        }
+
+        const relativePath = pathOfFile.replace(cwd, '').split(path.sep).filter(Boolean) // ["someFolder", "and.chip"]
+
+        let currentPath = dotChipFolderPath
+
+        for (let folderOrFile of relativePath) {
+          if (folderOrFile.endsWith('.chip')) {
+            const jsFileName = folderOrFile.replace('.chip', '.mjs') // Change to .js
+            currentPath = path.join(currentPath, jsFileName)
+          } else {
+            currentPath = path.join(currentPath, folderOrFile)
+            if (!fs.existsSync(currentPath)) {
+              fs.mkdirSync(currentPath, { recursive: true })
+            }
+          }
+        }
+
+        fs.writeFileSync(currentPath, classBody, 'utf8')
+
+        console.log('✅ JavaScript file created successfully at:', currentPath)
+
+        return { success: true, path: currentPath }
+      } catch (error) {
+        dialog.showErrorBox('File creation Error', (error as Error).message)
+        console.error('❌ Error saving file:', error)
+        return { success: false, error: (error as Error).message }
+      }
+    }
+  )
+
+  ipcMain.handle('getOutputsOfChip', async (_, filePath: string, inputs: Map<number, boolean>) => {
+    try {
+      const result = await getOutputs(filePath, inputs)
+      if (!result) {
+        return { error: 'Failed to compute outputs' }
+      }
+      return { outputs: result }
+    } catch (error) {
+      dialog.showErrorBox('Outputs Error', (error as Error).message)
+      console.error('❌ Error computing outputs:', error)
+      return { error: 'Failed to compute outputs' }
+    }
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -51,6 +51,14 @@ if (process.contextIsolated) {
       evaluateChip: async (name: string, chips: Content[]) => {
         const result = await ipcRenderer.invoke('evaluateChip', name, chips)
         return result
+      },
+      saveCompileFiles: async (cwd: string, pathOfFile: string, classBody: string) => {
+        const result = await ipcRenderer.invoke('saveCompileFiles', cwd, pathOfFile, classBody)
+        return result
+      },
+      getOutputsOfChip: async (filePath: string, inputs: Map<number, boolean>) => {
+        const result = await ipcRenderer.invoke('getOutputsOfChip', filePath, inputs)
+        return result
       }
     })
   } catch (error) {

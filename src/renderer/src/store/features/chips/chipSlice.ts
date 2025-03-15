@@ -77,6 +77,7 @@ export const chipSlice = createSlice({
       state.connectionTime = initialState.connectionTime
       state.inputChipBtn = initialState.inputChipBtn
       state.outputChipBtn = initialState.outputChipBtn
+      state.wires = initialState.wires
     },
     toggleChipStatus: (state, action: PayloadAction<number>) => {
       const id = action.payload
@@ -164,6 +165,20 @@ export const chipSlice = createSlice({
     },
     removeWire: (state, action: PayloadAction<string>) => {
       delete state.wires[action.payload]
+    },
+    toggleBulbs: (state, action: PayloadAction<Record<number, boolean>>) => {
+      const outs = new Map(Object.entries(action.payload).map(([key, val]) => [Number(key), val]))
+
+      outs.forEach((val, key) => {
+        const chipIndex = state.chipContents.findIndex((ch) => ch.id === key)
+
+        if (chipIndex !== -1) {
+          state.chipContents[chipIndex] = {
+            ...state.chipContents[chipIndex],
+            status: val ? 'on' : 'off'
+          }
+        }
+      })
     }
   }
 })
@@ -184,6 +199,7 @@ export const {
   addWire,
   removeWire,
   resetStates,
-  addWireToWires
+  addWireToWires,
+  toggleBulbs
 } = chipSlice.actions
 export default chipSlice.reducer
