@@ -1,34 +1,17 @@
-# electro-sim
+# **Electro-Sim** ⚡
 
-An Electron application with React and TypeScript
+### **Combinational Gates Simulator**
 
-## Recommended IDE Setup
+Electro-Sim is a desktop application that allows users to visually create, connect, and simulate combinational logic circuits. Users can drag and drop logic gates, establish connections, and evaluate circuit behavior in real-time.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## 🚀 **Project Status**
 
-## Project Setup
+🔧 This project is currently under development. The goal is to build and simulate an **8-bit computer** within the simulator.
 
-### Install
+## 💻 **Installation & Usage**
 
-```bash
-$ npm install
-```
+Coming soon...
 
-### Development
+## 🖼️ **Demo**
 
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
+![Electro-Sim Preview](demo.png)
