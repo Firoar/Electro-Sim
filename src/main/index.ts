@@ -10,15 +10,17 @@ import icon from '../../resources/icon.png?asset'
 import {
   allContents,
   evaluateChip,
+  getExactLocation,
   getOutputs,
   isCompiled,
+  makeCompiledTrue,
   saveToFile,
   writeChipFileContents
 } from './helper'
 import fs from 'fs'
 import prompt from 'electron-prompt'
 import { Content, FileData } from '../types/filedata'
-import { execSync } from 'child_process'
+// import { execSync } from 'child_process'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -281,10 +283,13 @@ app.whenReady().then(() => {
     return filteredContents.filter(Boolean)
   })
 
-  ipcMain.handle('retrieveContentofFile', async (_, path: string) => {
+  ipcMain.handle('retrieveContentofFile', async (_, filePath: string, cwd: string) => {
     try {
-      const data = fs.readFileSync(path, 'utf-8')
+      const data = fs.readFileSync(filePath, 'utf-8')
       const fileInfo: FileData = JSON.parse(data)
+      if (cwd !== '') {
+        fileInfo.location = getExactLocation(filePath, cwd)
+      }
       return fileInfo
     } catch (error) {
       dialog.showErrorBox('Open File Error', 'Error while opening file...')
@@ -309,6 +314,7 @@ app.whenReady().then(() => {
     'saveCompileFiles',
     async (_, cwd: string, pathOfFile: string, classBody: string) => {
       try {
+        const pof = pathOfFile
         let dotChipFolderPath = path.join(cwd, '.chips')
         if (!fs.existsSync(dotChipFolderPath)) {
           fs.mkdirSync(dotChipFolderPath, { recursive: true })
@@ -333,6 +339,7 @@ app.whenReady().then(() => {
         fs.writeFileSync(currentPath, classBody, 'utf8')
 
         console.log('✅ JavaScript file created successfully at:', currentPath)
+        await makeCompiledTrue(pof)
 
         return { success: true, path: currentPath }
       } catch (error) {
@@ -343,7 +350,7 @@ app.whenReady().then(() => {
     }
   )
 
-  ipcMain.handle('getOutputsOfChip', async (_, filePath: string, inputs: Map<number, boolean>) => {
+  ipcMain.handle('getOutputsOfChip', async (_, filePath: string, inputs: Map<string, boolean>) => {
     try {
       const result = await getOutputs(filePath, inputs)
       if (!result) {
@@ -354,6 +361,43 @@ app.whenReady().then(() => {
       dialog.showErrorBox('Outputs Error', (error as Error).message)
       console.error('❌ Error computing outputs:', error)
       return { error: 'Failed to compute outputs' }
+    }
+  })
+
+  ipcMain.handle('getDetailsofCustomChip', async (_, cwd: string, filePath: string) => {
+    const compileFilePath = filePath.split(cwd).join('')
+    const completeCompiledFilePath = path.join(cwd, '.chips', compileFilePath)
+
+    console.log(completeCompiledFilePath)
+  })
+
+  ipcMain.handle('getChipFromDiffrentPlace', async (_, currentPath) => {
+    try {
+      if (!mainWindow) return { success: false, error: 'No main window found' }
+
+      const result = await dialog.showOpenDialog(mainWindow, {
+        title: 'Select a .chip file',
+        buttonLabel: 'Choose File',
+        properties: ['openFile'],
+        filters: [{ name: 'Chip Files', extensions: ['chip'] }]
+      })
+
+      if (!result.canceled && result.filePaths.length > 0) {
+        const currDirPath = path.dirname(currentPath)
+        const selectedFilePath = result.filePaths[0]
+        const selectedDirPath = path.dirname(selectedFilePath)
+
+        if (currDirPath !== selectedDirPath) {
+          return { success: true, path: selectedFilePath }
+        } else {
+          return { success: false, reason: 'File is in the same directory' }
+        }
+      }
+
+      return { success: false, reason: 'No file selected' }
+    } catch (error) {
+      console.error('Error: ', error)
+      return { success: false, error: (error as Error).message }
     }
   })
 

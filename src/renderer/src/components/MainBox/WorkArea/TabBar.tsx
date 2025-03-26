@@ -22,7 +22,7 @@ const TabBar = () => {
     e.stopPropagation()
 
     //save the current selcted file
-    if (selectedFile !== '') {
+    if (selectedFile !== '' && selectedFile.endsWith('.chip')) {
       // save the chip content
       await window.electron.saveChipContents(selectedFile, chipContents)
       dispatch(resetContents())
@@ -37,7 +37,7 @@ const TabBar = () => {
 
   const handleSelectTab = async (file: string) => {
     if (selectedFile !== file) {
-      if (selectedFile !== '') {
+      if (selectedFile !== '' && selectedFile.endsWith('.chip')) {
         // save the chip content
         await window.electron.saveChipContents(selectedFile, chipContents)
         dispatch(resetContents())
@@ -59,7 +59,12 @@ const TabBar = () => {
             onClick={() => handleSelectTab(file)}
           >
             <p>{file.split('/').pop()}</p>
-            <RxCross2 onClick={(e) => handleRemoveFromTabs(file, e)} className={classes['cross']} />
+            {file === selectedFile && (
+              <RxCross2
+                onClick={(e) => handleRemoveFromTabs(file, e)}
+                className={classes['cross']}
+              />
+            )}
           </div>
         )
       })}

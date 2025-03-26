@@ -14,7 +14,7 @@ const ChipHeader = ({ chip }: { chip: Content }) => {
   return (
     <div className={classes['chip-header']}>
       <p className={classes['chip-name']}>
-        {chip.name}-{chip.id}
+        {chip.name.replace('.chip', '')}-{chip.id}
       </p>
       <div className={classes['chip-cancel-btn']} onClick={handleRemoveChip}>
         <RxCross2 style={{ width: '20px', height: '20px' }} />

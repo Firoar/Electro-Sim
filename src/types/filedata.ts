@@ -10,7 +10,7 @@ export type FileData = {
 export type Content = {
   id: number
   name: string
-  type: 'builtIn' | 'cutom'
+  type: 'builtIn' | 'custom'
   position: { x: number; y: number }
   location: string
   inputs: number

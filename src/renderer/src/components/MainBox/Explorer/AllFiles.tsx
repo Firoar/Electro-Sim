@@ -39,7 +39,7 @@ const AllFiles = () => {
       }
 
       if (selectedFile !== content.path) {
-        if (selectedFile !== '') {
+        if (selectedFile !== '' && selectedFile.endsWith('.chip')) {
           // save the chip content
           await window.electron.saveChipContents(selectedFile, chipContents)
           dispatch(resetContents())

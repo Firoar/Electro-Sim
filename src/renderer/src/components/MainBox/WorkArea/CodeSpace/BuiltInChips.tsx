@@ -7,8 +7,12 @@ import { pushToChipContents } from '@renderer/store/features/chips/chipSlice'
 const chipConfig = {
   switch: { inputs: 0, outputs: 1 },
   bulb: { inputs: 1, outputs: 0 },
+  bulb_t2: { inputs: 1, outputs: 2 },
   nand: { inputs: 2, outputs: 1 }
+
+  // memory: { inputs: 2, outputs: 0 }
 }
+const numberOfKeys = Object.keys(chipConfig).length
 
 const BuiltInChips = () => {
   const dispatch = useDispatch()
@@ -31,7 +35,7 @@ const BuiltInChips = () => {
   }
 
   return (
-    <div className={classes['built-in-chips']}>
+    <div style={{ height: `${numberOfKeys * 100}px` }} className={classes['built-in-chips']}>
       {Object.keys(chipConfig).map((chip) => (
         <div
           key={chip}

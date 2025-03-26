@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Content } from 'src/types/filedata'
+import { Content, FileData } from 'src/types/filedata'
 
 export interface chips {
   selectedChip: { name: string; loc: string }
@@ -10,6 +10,7 @@ export interface chips {
   wires: Record<string, boolean>
   inputChipBtn: string
   outputChipBtn: string
+  chipFileData: FileData | null
   // wireMap: Map<string, [number, number, number, number]>
 }
 
@@ -21,7 +22,8 @@ const initialState: chips = {
   connectionTime: false,
   wires: {},
   inputChipBtn: '',
-  outputChipBtn: ''
+  outputChipBtn: '',
+  chipFileData: null
   // wireMap: new Map<string, [number, number, number, number]>()
 }
 
@@ -166,11 +168,15 @@ export const chipSlice = createSlice({
     removeWire: (state, action: PayloadAction<string>) => {
       delete state.wires[action.payload]
     },
-    toggleBulbs: (state, action: PayloadAction<Record<number, boolean>>) => {
-      const outs = new Map(Object.entries(action.payload).map(([key, val]) => [Number(key), val]))
+    setChipFileData: (state, action: PayloadAction<FileData>) => {
+      state.chipFileData = action.payload
+    },
+
+    toggleBulbs: (state, action: PayloadAction<Record<string, boolean>>) => {
+      const outs = new Map(Object.entries(action.payload).map(([key, val]) => [key, val]))
 
       outs.forEach((val, key) => {
-        const chipIndex = state.chipContents.findIndex((ch) => ch.id === key)
+        const chipIndex = state.chipContents.findIndex((ch) => ch.id === Number(key.split('-')[0]))
 
         if (chipIndex !== -1) {
           state.chipContents[chipIndex] = {
@@ -200,6 +206,7 @@ export const {
   removeWire,
   resetStates,
   addWireToWires,
-  toggleBulbs
+  toggleBulbs,
+  setChipFileData
 } = chipSlice.actions
 export default chipSlice.reducer

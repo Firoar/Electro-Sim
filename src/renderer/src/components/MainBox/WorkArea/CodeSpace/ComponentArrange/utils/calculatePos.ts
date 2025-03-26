@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react'
 import { Content } from 'src/types/filedata'
 
 export const calculatePos = (i: number, type: 'in' | 'out') => {
@@ -9,7 +10,7 @@ export const calculatePos = (i: number, type: 'in' | 'out') => {
           left: '15px',
           width: '20px',
           height: '20px',
-          border: 'solid 2px black',
+          // border: 'solid 2px black',
           background: 'lightgreen',
           borderRadius: '50%'
         }
@@ -19,7 +20,7 @@ export const calculatePos = (i: number, type: 'in' | 'out') => {
           right: '15px',
           width: '20px',
           height: '20px',
-          border: 'solid 2px black',
+          border: 'solid 1px black',
           background: '#F08080',
           borderRadius: '50%'
         }
@@ -29,8 +30,7 @@ export const calculatePos = (i: number, type: 'in' | 'out') => {
 export const calculateDim = (numIn: number, numOut: number) => {
   const style: React.CSSProperties = {
     width: '150px',
-    height: `${Math.max(numIn, numOut) * 50 + 30}px`, // 30 for gate name 50 for each
-    border: 'solid 3px purple'
+    height: `${Math.max(numIn, numOut) * 50 + 30}px` // 30 for gate name 50 for each
   }
   return style
 }
@@ -55,4 +55,19 @@ export const giveCenterPositionOfOutput = (chip: Content, outputId: number) => {
   const finalX = chip.position.x + 150 - 15 - 0
   const finalY = chip.position.y + 30 + outputId * 50 + 15 + 23
   return [finalX, finalY]
+}
+
+export const bulbWithOutput = () => {
+  const style: CSSProperties = {
+    position: 'absolute',
+    top: `${0}px`,
+    right: '0px',
+    // border: 'solid 1px purple',
+    display: 'flex',
+    width: '50px',
+    height: '50px',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+  return style
 }

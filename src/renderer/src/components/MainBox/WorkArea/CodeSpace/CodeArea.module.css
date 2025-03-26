@@ -29,7 +29,6 @@
 
 .built-in-chips {
   width: 100%;
-  height: 300px;
 
   display: flex;
   align-items: center;
@@ -236,9 +235,14 @@
   flex-direction: row;
 }
 
+.chip-outputs {
+  /* border: solid red 1px; */
+}
+
 .bulb-img {
   width: 40px;
   height: 40px;
+  /* border: solid rgb(0, 60, 255) 1px; */
 }
 .line-svg {
   z-index: 5;

@@ -1,6 +1,6 @@
 import { Content } from 'src/types/filedata'
 import classes from '../CodeArea.module.css'
-import { calculatePos, giveCenterPositionOfInput } from './utils/calculatePos'
+import { calculatePos } from './utils/calculatePos'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInputChipBtn, toggleChipStatus } from '@renderer/store/features/chips/chipSlice'
 import { RootState } from '@renderer/store/store'
@@ -11,19 +11,18 @@ const ChipInputs = ({ chip }: { chip: Content }) => {
 
   const handleInputClicked = (chip: Content, i: number) => {
     if (!connectionTime) return
-
     const inputKey = `${chip.id}-${i}`
-
-    if (chip.name === 'nand') {
-      const alreadyConnected = chip.inputFrom.some(([_, __, port]) => port === i)
-      if (alreadyConnected) {
-        alert('You can only put one wire to the input port')
+    if (chip.name === 'switch') return
+    if (chip.name === 'bulb') {
+      if (chip.inputFrom.length > 0) {
+        alert('Bulb already has an input. Cannot connect more than one')
         return
       }
       dispatch(setInputChipBtn(inputKey))
-    } else if (chip.name === 'bulb') {
-      if (chip.inputFrom.length > 0) {
-        alert('Bulb already has an input. Cannot connect more than one')
+    } else {
+      const alreadyConnected = chip.inputFrom.some(([_, __, port]) => port === i)
+      if (alreadyConnected) {
+        alert('You can only put one wire to the input port')
         return
       }
       dispatch(setInputChipBtn(inputKey))

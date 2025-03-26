@@ -10,6 +10,7 @@ const EvaluateButton = () => {
 
   const handleEvaluateBtnClicked = async () => {
     const name = selectedFile.split('/').pop()?.split('.chip')[0] || 'random'
+
     const result = await window.electron.evaluateChip(name, chipContents)
     if ('error' in result) {
       alert('error...')
@@ -24,6 +25,7 @@ const EvaluateButton = () => {
         if ('error' in r) {
           console.log('error : ', r)
         } else {
+          console.log('o : ', r.outputs)
           dispatch(toggleBulbs(Object.fromEntries(r.outputs)))
         }
       }

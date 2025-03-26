@@ -16,6 +16,7 @@ const ConnectWireBtn = () => {
       alert('Cannot connet input and output of same chip together')
     else {
       //   alert(`Connection ${inputChipBtn} and ${outputChipBtn}`)
+
       dispatch(addWire(`${inputChipBtn}-${outputChipBtn}`))
       dispatch(setInputChipBtn(''))
       dispatch(setOutputChipBtn(''))

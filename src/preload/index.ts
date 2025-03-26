@@ -37,8 +37,12 @@ if (process.contextIsolated) {
         const result = await ipcRenderer.invoke('getCustomChips', path)
         return result
       },
-      retrieveContentofFile: async (path: string) => {
-        const result = await ipcRenderer.invoke('retrieveContentofFile', path)
+      retrieveContentofFile: async (filePath: string, cwd?: string) => {
+        if (cwd) {
+          const result = await ipcRenderer.invoke('retrieveContentofFile', filePath, cwd)
+          return result
+        }
+        const result = await ipcRenderer.invoke('retrieveContentofFile', filePath, '')
         return result
       },
       saveChipContents: async (path: string, chipContents: Content[]) => {
@@ -58,6 +62,13 @@ if (process.contextIsolated) {
       },
       getOutputsOfChip: async (filePath: string, inputs: Map<number, boolean>) => {
         const result = await ipcRenderer.invoke('getOutputsOfChip', filePath, inputs)
+        return result
+      },
+      getDetailsofCustomChip: async (cwd: string, filePath: string) => {
+        await ipcRenderer.invoke('getDetailsofCustomChip', cwd, filePath)
+      },
+      getChipFromDiffrentPlace: async (currentPath: string) => {
+        const result = await ipcRenderer.invoke('getChipFromDiffrentPlace', currentPath)
         return result
       }
     })

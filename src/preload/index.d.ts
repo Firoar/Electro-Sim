@@ -20,13 +20,16 @@ declare global {
       ) => Promise<{ success: boolean; message: string }>
       createFolderPrompt: () => Promise<string | null>
       getCustomChips: (path: string) => Promise<FilesInfo[]>
-      retrieveContentofFile: (path: string) => Promise<FileData | { error: string }>
+      retrieveContentofFile: (
+        filePath: string,
+        cwd?: string
+      ) => Promise<FileData | { error: string }>
       saveChipContents: (path: string, chipContents: Content[]) => Promise<Boolean>
       saveBeforeQuit: () => Promise<void>
       evaluateChip: (
         name: string,
         chips: Content[]
-      ) => Promise<{ class: string; inputs: Map<number, boolean> } | { error: string }>
+      ) => Promise<{ class: string; inputs: Map<string, boolean> } | { error: string }>
       saveCompileFiles: (
         cwd: string,
         pathOfFile: string,
@@ -34,8 +37,14 @@ declare global {
       ) => Promise<{ success: boolean; path: string } | { success: boolean; error: string }>
       getOutputsOfChip: (
         filePath: string,
-        inputs: Map<number, boolean>
-      ) => Promise<{ error: string } | { outputs: Map<number, boolean> }>
+        inputs: Map<string, boolean>
+      ) => Promise<{ error: string } | { outputs: Map<string, boolean> }>
+      getDetailsofCustomChip: (cwd: string, filePath: string) => Promise<void>
+      getChipFromDiffrentPlace: (
+        currentPath: string
+      ) => Promise<
+        { success: true; path: string } | { success: false; error?: string; reason?: string }
+      >
     }
     api: unknown
   }

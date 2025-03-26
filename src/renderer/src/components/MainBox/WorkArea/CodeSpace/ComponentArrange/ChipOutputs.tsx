@@ -2,7 +2,7 @@ import { Content } from 'src/types/filedata'
 import classes from '../CodeArea.module.css'
 import bulbOff from '@renderer/assets/bulb-turned-off.png'
 import bulbOn from '@renderer/assets/bulb-turned-on.png'
-import { calculatePos, giveCenterPositionOfOutput } from './utils/calculatePos'
+import { bulbWithOutput, calculatePos } from './utils/calculatePos'
 import { useDispatch, useSelector } from 'react-redux'
 import { setOutputChipBtn } from '@renderer/store/features/chips/chipSlice'
 import { RootState } from '@renderer/store/store'
@@ -27,6 +27,26 @@ const ChipOutputs = ({ chip }: { chip: Content }) => {
           alt={`${chip.status === 'off' ? 'bulb-turned-off' : 'bulb-turned-on'}`}
           src={`${chip.status === 'off' ? bulbOff : bulbOn}`}
         />
+      </div>
+    )
+  }
+
+  if (chip.name === 'bulb_t2') {
+    return (
+      <div className={classes['chip-outputs']}>
+        {/* also has bulb also outputs */}
+        <div style={bulbWithOutput()}>
+          <img
+            className={classes['bulb-img']}
+            alt={`${chip.status === 'off' ? 'bulb-turned-off' : 'bulb-turned-on'}`}
+            src={`${chip.status === 'off' ? bulbOff : bulbOn}`}
+          />
+        </div>
+        <div
+          onClick={() => handleOutputClicked(chip, 1)}
+          key={1 + '-out-' + chip.id}
+          style={calculatePos(1, 'out')}
+        ></div>
       </div>
     )
   }
